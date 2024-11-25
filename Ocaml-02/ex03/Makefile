@@ -54,10 +54,18 @@ $(TARGET): $(CMX_FILES)
 clean:
 	rm -rf $(BUILD_DIR)
 
+re:
+	$(MAKE) clean
+	$(MAKE) all
+
+run:
+	$(MAKE) re
+	./$(TARGET)
+
 # Generate dependencies
 depend:
 	$(OCAMLDEP) $(ML_FILES) $(MLI_FILES) > .depend
 
 -include .depend
 
-.PHONY: all native clean depend
+.PHONY: all native clean re run depend
