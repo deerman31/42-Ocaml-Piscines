@@ -29,7 +29,7 @@ CMX_FILES = $(patsubst $(SRC_DIR)/%.ml,$(BUILD_DIR)/%.cmx,$(ML_FILES))
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.ml,$(BUILD_DIR)/%.o,$(ML_FILES))
 
 # Main executable
-MAIN = ft_test_sign
+MAIN = ft_countdown
 TARGET = $(BUILD_DIR)/$(MAIN)
 
 # Default target
