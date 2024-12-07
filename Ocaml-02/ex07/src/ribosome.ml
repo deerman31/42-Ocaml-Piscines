@@ -141,82 +141,87 @@ let generate_bases_triplets (rna : rna) :
   loop [] rna
 
 let rec decode_arn (rna : rna) : aminoacid list =
-  let codon_to_aminoacid nucleotide1 nucleotide2 nucleotide3 =
-    match
-      (nucleotide1.nucleobase, nucleotide2.nucleobase, nucleotide3.nucleobase)
-    with
-    | U, A, A -> Some Stop
-    | U, A, G -> Some Stop
-    | U, G, A -> Some Stop
-    | G, C, A -> Some Ala
-    | G, C, C -> Some Ala
-    | G, C, U -> Some Ala
-    | A, G, A -> Some Arg
-    | A, G, G -> Some Arg
-    | C, G, A -> Some Arg
-    | C, G, C -> Some Arg
-    | C, G, G -> Some Arg
-    | C, G, U -> Some Arg
-    | A, A, C -> Some Asn
-    | A, A, U -> Some Asn
-    | G, A, C -> Some Asp
-    | G, A, U -> Some Asp
-    | U, G, C -> Some Cys
-    | U, G, U -> Some Cys
-    | C, A, A -> Some Gln
-    | C, A, G -> Some Gln
-    | G, A, A -> Some Glu
-    | G, A, G -> Some Glu
-    | G, G, A -> Some Gly
-    | G, G, C -> Some Gly
-    | G, G, G -> Some Gly
-    | G, G, U -> Some Gly
-    | C, A, C -> Some His
-    | C, A, U -> Some His
-    | A, U, A -> Some Ile
-    | A, U, C -> Some Ile
-    | A, U, U -> Some Ile
-    | C, U, A -> Some Leu
-    | C, U, C -> Some Leu
-    | C, U, G -> Some Leu
-    | C, U, U -> Some Leu
-    | U, U, A -> Some Leu
-    | U, U, G -> Some Leu
-    | A, A, A -> Some Lys
-    | A, A, G -> Some Lys
-    | A, U, G -> Some Met
-    | U, U, C -> Some Phe
-    | U, U, U -> Some Phe
-    | C, C, C -> Some Pro
-    | C, C, A -> Some Pro
-    | C, C, G -> Some Pro
-    | C, C, U -> Some Pro
-    | U, C, A -> Some Ser
-    | U, C, C -> Some Ser
-    | U, C, G -> Some Ser
-    | U, C, U -> Some Ser
-    | A, G, U -> Some Ser
-    | A, G, C -> Some Ser
-    | A, C, A -> Some Thr
-    | A, C, C -> Some Thr
-    | A, C, G -> Some Thr
-    | A, C, U -> Some Thr
-    | U, G, G -> Some Trp
-    | U, A, C -> Some Tyr
-    | U, A, U -> Some Tyr
-    | G, U, A -> Some Val
-    | G, U, C -> Some Val
-    | G, U, G -> Some Val
-    | G, U, U -> Some Val
-    | _, _, _ -> None
+  let codon_to_aminoacid (nucleotide : nucleotide * nucleotide * nucleotide) :
+      aminoacid option =
+    match nucleotide with
+    | nucleotide1, nucleotide2, nucleotide3 -> (
+        match
+          ( nucleotide1.nucleobase,
+            nucleotide2.nucleobase,
+            nucleotide3.nucleobase )
+        with
+        | U, A, A -> Some Stop
+        | U, A, G -> Some Stop
+        | U, G, A -> Some Stop
+        | G, C, A -> Some Ala
+        | G, C, C -> Some Ala
+        | G, C, U -> Some Ala
+        | A, G, A -> Some Arg
+        | A, G, G -> Some Arg
+        | C, G, A -> Some Arg
+        | C, G, C -> Some Arg
+        | C, G, G -> Some Arg
+        | C, G, U -> Some Arg
+        | A, A, C -> Some Asn
+        | A, A, U -> Some Asn
+        | G, A, C -> Some Asp
+        | G, A, U -> Some Asp
+        | U, G, C -> Some Cys
+        | U, G, U -> Some Cys
+        | C, A, A -> Some Gln
+        | C, A, G -> Some Gln
+        | G, A, A -> Some Glu
+        | G, A, G -> Some Glu
+        | G, G, A -> Some Gly
+        | G, G, C -> Some Gly
+        | G, G, G -> Some Gly
+        | G, G, U -> Some Gly
+        | C, A, C -> Some His
+        | C, A, U -> Some His
+        | A, U, A -> Some Ile
+        | A, U, C -> Some Ile
+        | A, U, U -> Some Ile
+        | C, U, A -> Some Leu
+        | C, U, C -> Some Leu
+        | C, U, G -> Some Leu
+        | C, U, U -> Some Leu
+        | U, U, A -> Some Leu
+        | U, U, G -> Some Leu
+        | A, A, A -> Some Lys
+        | A, A, G -> Some Lys
+        | A, U, G -> Some Met
+        | U, U, C -> Some Phe
+        | U, U, U -> Some Phe
+        | C, C, C -> Some Pro
+        | C, C, A -> Some Pro
+        | C, C, G -> Some Pro
+        | C, C, U -> Some Pro
+        | U, C, A -> Some Ser
+        | U, C, C -> Some Ser
+        | U, C, G -> Some Ser
+        | U, C, U -> Some Ser
+        | A, G, U -> Some Ser
+        | A, G, C -> Some Ser
+        | A, C, A -> Some Thr
+        | A, C, C -> Some Thr
+        | A, C, G -> Some Thr
+        | A, C, U -> Some Thr
+        | U, G, G -> Some Trp
+        | U, A, C -> Some Tyr
+        | U, A, U -> Some Tyr
+        | G, U, A -> Some Val
+        | G, U, C -> Some Val
+        | G, U, G -> Some Val
+        | G, U, U -> Some Val
+        | _, _, _ -> None)
   in
 
   let rec loop (acc : aminoacid list)
       (lst : (nucleotide * nucleotide * nucleotide) list) : aminoacid list =
     match lst with
     | [] -> acc
-    | (first1, first2, first3) :: rest -> (
-        let aminoacid = codon_to_aminoacid first1 first2 first3 in
+    | first :: rest -> (
+        let aminoacid = codon_to_aminoacid first in
         match aminoacid with
         | Some q -> if q = Stop then Stop :: acc else loop (q :: acc) rest
         | None -> acc)
@@ -224,7 +229,40 @@ let rec decode_arn (rna : rna) : aminoacid list =
 
   rev (loop [] (generate_bases_triplets rna))
 
-(*
-GUA, GUC, GUG, GUU : Valine -> Val *)
+let string_of_protein (p : protein) : string =
+  let aminoacid_to_string (a : aminoacid) : string =
+    match a with
+    | Stop -> "Stop"
+    | Ala -> "Ala"
+    | Arg -> "Arg"
+    | Asn -> "Asn"
+    | Asp -> "Asp"
+    | Cys -> "Cys"
+    | Gln -> "Gln"
+    | Glu -> "Glu"
+    | Gly -> "Gly"
+    | His -> "His"
+    | Ile -> "Ile"
+    | Leu -> "Leu"
+    | Lys -> "Lys"
+    | Met -> "Met"
+    | Phe -> "Phe"
+    | Pro -> "Pro"
+    | Ser -> "Ser"
+    | Thr -> "Thr"
+    | Trp -> "Trp"
+    | Tyr -> "Tyr"
+    | Val -> "Val"
+  in
 
-(* let string_of_protein *)
+  let rec concat lst =
+    match lst with [] -> "" | first :: rest -> first ^ concat rest
+  in
+
+  let rec loop (result : string list) (lst : protein) : string =
+    match lst with
+    | [] -> concat (rev result)
+    | first :: rest -> loop (aminoacid_to_string first :: result) rest
+  in
+
+  loop [] p

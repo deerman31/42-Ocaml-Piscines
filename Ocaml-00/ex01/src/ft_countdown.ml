@@ -1,4 +1,5 @@
-(* let rec ft_countdown x =
+(*
+let rec ft_countdown x =
    let print_int_endline x =
      print_int x;
      print_char '\n'
@@ -6,14 +7,16 @@
    if x <= 0 then print_int_endline 0
    else (
      print_int_endline x;
-     ft_countdown (x - 1)) *)
+     ft_countdown (x - 1))
+ *)
+
 let ft_countdown x =
   let print_int_endline x =
     print_int x;
     print_char '\n'
   in
   let rec loop acc =
-    if x <= 0 then print_int_endline 0
+    if acc <= 0 then print_int_endline 0
     else (
       print_int_endline acc;
       loop (acc - 1))
